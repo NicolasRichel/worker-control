@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Worker Registry</title>
+    <link rel="icon" href="./web-components-logo.png"/>
+    <script defer type="text/javascript" src="./utils.js"></script>
+    <script defer type="text/javascript" src="../elements/worker-creator.js"></script>
+    <script defer type="text/javascript" src="../elements/worker-item.js"></script>
+    <script defer type="text/javascript" src="../elements/worker-registry.js"></script>
+    <style>
+      div { margin: 0; padding: 16px 48px; }
+    </style>
+  </head>
+  <body>
+    <h1>Worker Registry Test</h1>
+    <div>
+      Worker Creator : <worker-creator id="c1" src="./workers/worker.js">Create Worker</worker-creator>
+    </div>
+    <div>
+      <worker-registry listen-to="c1"></worker-registry>
+    </div>
+  </body>
+</html>
