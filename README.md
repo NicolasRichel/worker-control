@@ -8,6 +8,10 @@ Here is the list of elements that are currently under development :
 - [worker-registry](./elements/worker-registry.js)
 - [worker-item](./elements/worker-item.js)
 
+The schema below give an overview on how the elements interact with each other.
+
+![worker-control_schema](./worker-control_schema.png)
+
 
 ## Contributing
 
