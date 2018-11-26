@@ -5,7 +5,7 @@
  */
 
 // Create element
-class WorkerItem extends HTMLElement {
+export default class WorkerItem extends HTMLElement {
 
   constructor() {
     super();

@@ -7,7 +7,7 @@
  */
 
 // Create element
-class WorkerCreator extends HTMLElement {
+export default class WorkerCreator extends HTMLElement {
 
   constructor() {
     super();
@@ -27,7 +27,7 @@ class WorkerCreator extends HTMLElement {
       this.disabled = true;
     }
     if (!this.hasAttribute('src')) {
-      console.warn('Worker Creator must have a \'src\' attribute set -> Worker Creator disabled.');
+      console.warn('Worker Creator must have a \'src\' attribute -> Worker Creator disabled.');
       this.disabled = true;
     }
   }
@@ -45,6 +45,7 @@ class WorkerCreator extends HTMLElement {
     });
     this.dispatchEvent(event);
   }
+  
 
   // Reflect 'disabled' property to attribute
   get disabled() { return this.hasAttribute('disabled'); }

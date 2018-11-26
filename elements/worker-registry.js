@@ -6,8 +6,11 @@
  * It also manage a list of worker item to interact with workers.
  */
 
+import WorkerCreator from './worker-creator.js';
+import WorkerItem from './worker-item.js';
+
 // Create element
-class WorkerRegistry extends HTMLElement {
+export default class WorkerRegistry extends HTMLElement {
 
   constructor() {
     super();
@@ -19,7 +22,7 @@ class WorkerRegistry extends HTMLElement {
         ul { list-style-type: none; }
         ul > li { margin: 12px;padding: 4px; border: 1px solid black; }
       </style>
-      <ul id="toto"></ul>
+      <ul id="worker-list"></ul>
     `;
     const sdom = this.attachShadow({mode: 'open'});
     sdom.appendChild(wrapper);
@@ -31,7 +34,7 @@ class WorkerRegistry extends HTMLElement {
     } else {
       const creator = document.getElementById(this.getAttribute('listen-to'));
       if (!creator) {
-        console.warn('Worker Registry : \'listen-to\' must point to a valid HTM element.');
+        console.warn('Worker Registry : \'listen-to\' must point to a valid HTML element.');
       } else if (!(creator instanceof WorkerCreator)) {
         console.warn('Worker Registry : \'listen-to\' must point to a WorkerCreator.');
       } else {
@@ -70,11 +73,11 @@ class WorkerRegistry extends HTMLElement {
     // Add new worker to registry
     this.registry.push(e.detail);
     // Create new worker item in the shadow DOM
-    this.shadowRoot.querySelector('ul').innerHTML += `
+    this.shadowRoot.getElementById('worker-list').insertAdjacentHTML('beforeend', `
       <li id="${e.detail.id}">
         <worker-item uuid="${e.detail.id}" name="${e.detail.name}"></worker-item>
       </li>
-    `;
+    `);
     this.shadowRoot.querySelector(`[uuid="${e.detail.id}"]`)
       .addEventListener('action', this.executeAction.bind(this));
   }
