@@ -24,8 +24,7 @@ export default class WorkerRegistry extends HTMLElement {
       </style>
       <ul id="worker-list"></ul>
     `;
-    const sdom = this.attachShadow({mode: 'open'});
-    sdom.appendChild(wrapper);
+    this.attachShadow({mode: 'open'}).appendChild(wrapper);
   }
 
   connectedCallback() {
@@ -40,6 +39,13 @@ export default class WorkerRegistry extends HTMLElement {
       } else {
         creator.addEventListener('worker-created', this.addWorkerToRegistry.bind(this));
       }
+    }
+  }
+
+  disconnectedCallback() {
+    // Stop all registered workers and empty registry
+    while (this.registry.length!==0) {
+      ( this.registry.splice(i, 1) )[0].worker.terminate();
     }
   }
 
@@ -79,7 +85,7 @@ export default class WorkerRegistry extends HTMLElement {
       </li>
     `);
     this.shadowRoot.querySelector(`[uuid="${e.detail.id}"]`)
-      .addEventListener('action', this.executeAction.bind(this));
+        .addEventListener('action', this.executeAction.bind(this));
   }
 
   executeAction(e) {

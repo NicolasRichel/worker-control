@@ -20,25 +20,25 @@ export default class WorkerItem extends HTMLElement {
         <button class="btn-stop">Stop</button>
       </div>
     `;
-    const sdom = this.attachShadow({mode: 'open'});
-    sdom.appendChild(wrapper);
+    this.attachShadow({mode: 'open'}).appendChild(wrapper);
   }
 
   connectedCallback() {
     this.shadowRoot.querySelector('.btn-stop')
-      .addEventListener('click', this.dispatchStopEvent.bind(this));
+        .addEventListener('click', this.dispatchStopEvent.bind(this));
     this.state = 'Running';
   }
 
   // Action Event dispatchers
   dispatchStopEvent(e) {
-    const event = new CustomEvent('action', {
-      detail: {
-        type: 'stop',
-        id: this.getAttribute('uuid'),
-      }
-    });
-    this.dispatchEvent(event);
+    this.dispatchEvent(
+      new CustomEvent('action', {
+        detail: {
+          type: 'stop',
+          id: this.getAttribute('uuid')
+        }
+      })
+    );
   }
   // ===
 
