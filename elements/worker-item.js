@@ -24,8 +24,9 @@ export default class WorkerItem extends HTMLElement {
   }
 
   connectedCallback() {
-    this.shadowRoot.querySelector('.btn-stop')
-        .addEventListener('click', this.dispatchStopEvent.bind(this));
+    this.shadowRoot
+      .querySelector('.btn-stop')
+      .addEventListener('click', this.dispatchStopEvent.bind(this));
     this.state = 'Running';
   }
 
