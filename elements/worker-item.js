@@ -4,6 +4,15 @@
  * This element aim at providing an interface to interact with a given worker.
  */
 
+
+// Element styles
+const styles = `
+  label {
+    font-weight: bold;
+  }
+`;
+
+
 // Create element
 export default class WorkerItem extends HTMLElement {
 
@@ -13,9 +22,10 @@ export default class WorkerItem extends HTMLElement {
     // Create Shadow DOM
     const wrapper = document.createElement('div');
     wrapper.innerHTML = `
-      <div><b>UUID :</b> ${this.getAttribute('uuid')}</div>
-      <div><b>Name :</b> ${this.getAttribute('name')}</div>
-      <div><b>State :</b> ${this.state}</div>
+      <style>${styles}</style>
+      <div><label>UUID :</label> ${this.getAttribute('uuid')}</div>
+      <div><label>Name :</label> ${this.getAttribute('name')}</div>
+      <div><label>State :</label> ${this.state}</div>
       <div>
         <button class="btn-stop">Stop</button>
       </div>

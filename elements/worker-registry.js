@@ -7,7 +7,20 @@
  */
 
 import WorkerCreator from './worker-creator.js';
-import WorkerItem from './worker-item.js';
+
+
+// Element styles
+const styles = `
+  ul {
+    list-style-type: none;
+  }
+  ul > li {
+    margin: 12px;
+    padding: 4px;
+    border: 1px solid black;
+  }
+`;
+
 
 // Create element
 export default class WorkerRegistry extends HTMLElement {
@@ -18,10 +31,7 @@ export default class WorkerRegistry extends HTMLElement {
     // Create Shadow DOM
     const wrapper = document.createElement('div');
     wrapper.innerHTML = `
-      <style>
-        ul { list-style-type: none; }
-        ul > li { margin: 12px;padding: 4px; border: 1px solid black; }
-      </style>
+      <style>${styles}</style>
       <ul id="worker-list"></ul>
     `;
     this.attachShadow({mode: 'open'}).appendChild(wrapper);
@@ -54,7 +64,7 @@ export default class WorkerRegistry extends HTMLElement {
 
   attributeChangedCallback(name, oldValue, newValue) {
     switch (name) {
-      case 'listen-to': this.listenTo_ChangeHandler(oldValue, newValue);
+      case 'listen-to': this.listenTo_ChangeHandler(oldValue, newValue); break;
     }
   }
 
@@ -79,13 +89,18 @@ export default class WorkerRegistry extends HTMLElement {
     // Add new worker to registry
     this.registry.push(e.detail);
     // Create new worker item in the shadow DOM
-    this.shadowRoot.getElementById('worker-list').insertAdjacentHTML('beforeend', `
-      <li id="${e.detail.id}">
-        <worker-item uuid="${e.detail.id}" name="${e.detail.name}"></worker-item>
-      </li>
-    `);
+    this.shadowRoot.getElementById('worker-list')
+      .insertAdjacentHTML(
+        'beforeend', `
+        <li id="${e.detail.id}">
+          <worker-item uuid="${e.detail.id}" name="${e.detail.name}"></worker-item>
+        </li>
+      `);
     this.shadowRoot.querySelector(`[uuid="${e.detail.id}"]`)
-        .addEventListener('action', this.executeAction.bind(this));
+      .addEventListener(
+        'action',
+        this.executeAction.bind(this)
+      );
   }
 
   executeAction(e) {
