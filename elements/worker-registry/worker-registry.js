@@ -6,11 +6,13 @@
  * It also manage a list of worker item to interact with workers.
  */
 
-import WorkerCreator from './worker-creator.js';
+import WorkerCreator from '../worker-creator/worker-creator.js';
 
+const html = `
+  <ul id="worker-list"></ul>
+`;
 
-// Element styles
-const styles = `
+const css = `
   ul {
     list-style-type: none;
   }
@@ -21,20 +23,22 @@ const styles = `
   }
 `;
 
-
-// Create element
 export default class WorkerRegistry extends HTMLElement {
 
   constructor() {
     super();
     this.registry = new Array();
-    // Create Shadow DOM
+    this._createShadowDOM();
+  }
+
+  _createShadowDOM() {
+    const styles = document.createElement('style');
+    styles.textContent = css;
     const wrapper = document.createElement('div');
-    wrapper.innerHTML = `
-      <style>${styles}</style>
-      <ul id="worker-list"></ul>
-    `;
-    this.attachShadow({mode: 'open'}).appendChild(wrapper);
+    wrapper.innerHTML = html;
+    const shadowRoot = this.attachShadow({ mode: 'open' });
+    shadowRoot.appendChild(styles);
+    shadowRoot.appendChild(wrapper);
   }
 
   connectedCallback() {
@@ -54,13 +58,15 @@ export default class WorkerRegistry extends HTMLElement {
 
   disconnectedCallback() {
     // Stop all registered workers and empty registry
-    while (this.registry.length!==0) {
-      ( this.registry.splice(i, 1) )[0].worker.terminate();
+    while (this.registry.length !== 0) {
+      ( this.registry.splice(0, 1) )[0].worker.terminate();
     }
   }
 
   // Attribute Change handlers
-  static get observedAttributes() { return ['listen-to']; }
+  static get observedAttributes() {
+    return ['listen-to'];
+  }
 
   attributeChangedCallback(name, oldValue, newValue) {
     switch (name) {
@@ -111,12 +117,8 @@ export default class WorkerRegistry extends HTMLElement {
   }
 
   removeWorkerFromRegistry(uuid) {
-    const iterator = this.registry.entries();
-    let obj, i;
-    do {
-      obj = iterator.next(); i = obj.value[0];
-    } while (uuid !== obj.value[1].id);
     // Remove the worker from registry and stop it
+    const i = this.registry.findIndex(x => x.id === uuid);
     ( this.registry.splice(i, 1) )[0].worker.terminate();
     // Remove the corresponding worker item
     this.shadowRoot.getElementById(uuid).remove();
@@ -125,5 +127,4 @@ export default class WorkerRegistry extends HTMLElement {
 
 }
 
-// Register element
 window.customElements.define('worker-registry', WorkerRegistry);

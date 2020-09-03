@@ -1,23 +1,24 @@
 /**
  * Worker Creator Element
  *
- * This element is used to create workers by clicking on a button.
+ * This element is used to create workers by clicking a button.
  * The script that define the workers created by this element must be specified
- * by the 'src' attribute (if its not the button will be disabled).
+ * by the 'src' attribute (if its not, the button will be automatically disabled).
  */
 
-// Create element
 export default class WorkerCreator extends HTMLElement {
 
   constructor() {
     super();
     this.count = 0;
+    this._createShadowDOM();
     this.addEventListener('click', this.createWorker);
-    // Create Shadow DOM
+  }
+
+  _createShadowDOM() {
     const btn = document.createElement('button');
     btn.textContent = this.textContent;
-    const sdom = this.attachShadow({mode: 'open'});
-    sdom.appendChild(btn);
+    this.attachShadow({ mode: 'open' }).appendChild(btn);
   }
 
   connectedCallback() {
@@ -32,7 +33,6 @@ export default class WorkerCreator extends HTMLElement {
     }
   }
 
-  // Worker Creation function
   createWorker(e) {
     const worker = new Worker(this.getAttribute('src'));
     this.count++;
@@ -47,6 +47,7 @@ export default class WorkerCreator extends HTMLElement {
   }
   
 
+
   // Reflect 'disabled' property to attribute
   get disabled() { return this.hasAttribute('disabled'); }
   set disabled(value) {
@@ -57,5 +58,4 @@ export default class WorkerCreator extends HTMLElement {
 
 }
 
-// Register element
 window.customElements.define('worker-creator', WorkerCreator);

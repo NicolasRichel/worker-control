@@ -1,0 +1,43 @@
+<div class="html">
+  <h3>Worker Creator Example</h3>
+  <div>
+    This button is a Worker Creator:
+    <worker-creator src="./workers/worker.js">Create Worker</worker-creator>
+  </div>
+  <div>
+    <textarea id="text"></textarea><br/>
+    <button id="send-message">Send Message to Worker</button>
+    <button id="stop-worker">Stop Worker</button>
+  </div>
+</div>
+<!-- - -->
+<style>
+  #text {
+    width: 218px;
+    height: 110px;
+    resize: none;
+  }
+</style>
+<!-- - -->
+<script>
+  (() => {
+    let worker;
+  
+    document.querySelector('worker-creator').addEventListener('worker-created', (e) => {
+      // Stop previous worker if any
+      if (worker) worker.terminate();
+      // Log new worker UUID
+      console.log(`Worker UUID: ${e.detail.id}`);
+      // Set the new worker
+      worker = e.detail.worker;
+    });
+  
+    document.querySelector('button#send-message').addEventListener('click', () => {
+      if (worker) worker.postMessage(document.getElementById('text').value);
+    });
+  
+    document.querySelector('button#stop-worker').addEventListener('click', () => {
+      if (worker) worker.terminate();
+    });
+  })();
+</script>

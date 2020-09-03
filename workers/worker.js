@@ -1,5 +1,5 @@
 /**
- * A very basic workerfor test.
+ * A very basic worker for test.
  */
 
 // Handle Messages

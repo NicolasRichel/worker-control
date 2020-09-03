@@ -1,22 +1,27 @@
 <!doctype html>
 <html>
   <head>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <title>Worker Management</title>
-    <link rel="icon" href="./web-components-logo.png"/>
-    <script defer type="text/javascript" src="./utils.js"></script>
-    <script defer type="module" src="./custom-elements.js"></script>
-    <style>
-      body { margin: 0; padding: 16px; }
-      ul { margin-top: 32px; list-style-type: none; }
-    </style>
+    <link rel="icon" href="./web-components-logo.png" />
+    <link rel="stylesheet" href="./index.css" />
+
+    <script defer src="./index.js"></script>
+    <script type="module" src="./custom-elements.js"></script>
+
   </head>
   <body>
-    <h1>Worker Management Element</h1>
-    <p>Here is the list of elements cuurently under development :</p>
-    <ul>
-      <li><a href="./worker-creator-test.html"><b>Worker Creator</b></a></li>
-      <li><a href="./worker-registry-test.html"><b>Worker Registry</b></a></li>
-    </ul>
+    <h1>Worker Management Elements</h1>
+    <p>Here is the list of elements currently under development :</p>
+    <button onclick="showExample('worker-creator');">
+      <b>Worker Creator</b>
+    </button>
+    <button onclick="showExample('worker-item');">
+      <b>Worker Item</b>
+    </button>
+    <button onclick="showExample('worker-registry');">
+      <b>Worker Registry</b>
+    </button>
+    <div id="example-container"></div>
   </body>
 </html>
