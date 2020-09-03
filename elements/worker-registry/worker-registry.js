@@ -6,23 +6,39 @@
  * It also manage a list of worker item to interact with workers.
  */
 
-// Create element
-class WorkerRegistry extends HTMLElement {
+import WorkerCreator from '../worker-creator/worker-creator.js';
+
+const html = `
+  <ul id="worker-list"></ul>
+`;
+
+const css = `
+  ul {
+    list-style-type: none;
+  }
+  ul > li {
+    margin: 12px;
+    padding: 4px;
+    border: 1px solid black;
+  }
+`;
+
+export default class WorkerRegistry extends HTMLElement {
 
   constructor() {
     super();
     this.registry = new Array();
-    // Create Shadow DOM
+    this._createShadowDOM();
+  }
+
+  _createShadowDOM() {
+    const styles = document.createElement('style');
+    styles.textContent = css;
     const wrapper = document.createElement('div');
-    wrapper.innerHTML = `
-      <style>
-        ul { list-style-type: none; }
-        ul > li { margin: 12px;padding: 4px; border: 1px solid black; }
-      </style>
-      <ul id="toto"></ul>
-    `;
-    const sdom = this.attachShadow({mode: 'open'});
-    sdom.appendChild(wrapper);
+    wrapper.innerHTML = html;
+    const shadowRoot = this.attachShadow({ mode: 'open' });
+    shadowRoot.appendChild(styles);
+    shadowRoot.appendChild(wrapper);
   }
 
   connectedCallback() {
@@ -31,7 +47,7 @@ class WorkerRegistry extends HTMLElement {
     } else {
       const creator = document.getElementById(this.getAttribute('listen-to'));
       if (!creator) {
-        console.warn('Worker Registry : \'listen-to\' must point to a valid HTM element.');
+        console.warn('Worker Registry : \'listen-to\' must point to a valid HTML element.');
       } else if (!(creator instanceof WorkerCreator)) {
         console.warn('Worker Registry : \'listen-to\' must point to a WorkerCreator.');
       } else {
@@ -40,12 +56,21 @@ class WorkerRegistry extends HTMLElement {
     }
   }
 
+  disconnectedCallback() {
+    // Stop all registered workers and empty registry
+    while (this.registry.length !== 0) {
+      ( this.registry.splice(0, 1) )[0].worker.terminate();
+    }
+  }
+
   // Attribute Change handlers
-  static get observedAttributes() { return ['listen-to']; }
+  static get observedAttributes() {
+    return ['listen-to'];
+  }
 
   attributeChangedCallback(name, oldValue, newValue) {
     switch (name) {
-      case 'listen-to': this.listenTo_ChangeHandler(oldValue, newValue);
+      case 'listen-to': this.listenTo_ChangeHandler(oldValue, newValue); break;
     }
   }
 
@@ -70,13 +95,18 @@ class WorkerRegistry extends HTMLElement {
     // Add new worker to registry
     this.registry.push(e.detail);
     // Create new worker item in the shadow DOM
-    this.shadowRoot.querySelector('ul').innerHTML += `
-      <li id="${e.detail.id}">
-        <worker-item uuid="${e.detail.id}" name="${e.detail.name}"></worker-item>
-      </li>
-    `;
+    this.shadowRoot.getElementById('worker-list')
+      .insertAdjacentHTML(
+        'beforeend', `
+        <li id="${e.detail.id}">
+          <worker-item uuid="${e.detail.id}" name="${e.detail.name}"></worker-item>
+        </li>
+      `);
     this.shadowRoot.querySelector(`[uuid="${e.detail.id}"]`)
-      .addEventListener('action', this.executeAction.bind(this));
+      .addEventListener(
+        'action',
+        this.executeAction.bind(this)
+      );
   }
 
   executeAction(e) {
@@ -87,12 +117,8 @@ class WorkerRegistry extends HTMLElement {
   }
 
   removeWorkerFromRegistry(uuid) {
-    const iterator = this.registry.entries();
-    let obj, i;
-    do {
-      obj = iterator.next(); i = obj.value[0];
-    } while (uuid !== obj.value[1].id);
     // Remove the worker from registry and stop it
+    const i = this.registry.findIndex(x => x.id === uuid);
     ( this.registry.splice(i, 1) )[0].worker.terminate();
     // Remove the corresponding worker item
     this.shadowRoot.getElementById(uuid).remove();
@@ -101,5 +127,4 @@ class WorkerRegistry extends HTMLElement {
 
 }
 
-// Register element
 window.customElements.define('worker-registry', WorkerRegistry);

@@ -4,9 +4,13 @@ This repository contains a set of custom HTML elements that provide the ability
 to manage [Web Workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers).
 
 Here is the list of elements that are currently under development :
-- [worker-creator](./elements/worker-creator.js)
-- [worker-registry](./elements/worker-registry.js)
-- [worker-item](./elements/worker-item.js)
+- [worker-creator](./elements/worker-creator/worker-creator.js)
+- [worker-item](./elements/worker-item/worker-item.js)
+- [worker-registry](./elements/worker-registry/worker-registry.js)
+
+The schema below give an overview on how the elements interact with each other.
+
+![worker-control_schema](./worker-control_schema.png)
 
 
 ## Contributing

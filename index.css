@@ -1,0 +1,19 @@
+body {
+  margin: 0;
+  padding: 16px;
+}
+
+ul {
+  margin-top: 32px;
+  list-style-type: none;
+}
+
+#example-container {
+  margin-top: 10px;
+  padding: 20px;
+  border: 1px dotted black;
+}
+
+#example-container h3 {
+  margin-top: 0;
+}
